@@ -12,10 +12,9 @@ public class Tile : MonoBehaviour
     void Start()
     {
         boxCollider2D = GetComponent<BoxCollider2D>();
-       
+        
     }
 
-   
     [System.Serializable]
     public class DirectionMapping
     {
@@ -50,6 +49,7 @@ public class Tile : MonoBehaviour
 
     public void ResetCollider()
     {
+        boxCollider2D = GetComponent<BoxCollider2D>();
         boxCollider2D.size = new Vector2(0.8f, 0.8f);
     }
 

@@ -20,7 +20,6 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     public bool isStart = false;
     private Player playerScript;
     
-
     List<Vector2> startPositions;
 
     //ステージの座標
@@ -41,7 +40,6 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     List<GameObject> movablePiece = new List<GameObject>();
     public List<Tile> allTilesScript = new List<Tile>();
    
-
     // Start is called before the first frame update
     void Start()
     {
@@ -72,8 +70,6 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-
-
                 Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
                 RaycastHit2D hit2D = Physics2D.Raycast(worldPoint, Vector2.zero);
@@ -84,30 +80,12 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
 
                     GameObject emptyPiece = GetEmptyPiece(hitPiece);
 
-
                     SwapPiece(hitPiece, emptyPiece);
-
-
-                    /*
-                    retryButton.SetActive(true);
-
-                    for (int i = 0; i < pieces.Count; i++)
-                    {
-                        Vector2 position = movablePiece[i].transform.position;
-
-                        if (position != startPositions[i])
-                        {
-                            retryButton.SetActive(false);
-                        }
-                    }
-                    */
 
                 }
             }
         }
-        
-       
-        
+               
     }
 
     GameObject GetEmptyPiece(GameObject piece)
@@ -141,8 +119,6 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         playerObj.transform.position = new Vector3(-1.5f, 2.5f, 0);
 
         moveStartButton.SetActive(true);
-        
-        //SceneManager.LoadScene("SlidePuzzleScene");
 
     }
 
@@ -161,7 +137,6 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
                 freePiece = piece;
             }
             
-
         }
         else
         {
@@ -184,17 +159,20 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     {
         playerScript.isMoving = true;
         moveStartButton.SetActive(false);
-
     }
 
     public void miss()
-    {
-          
+    {          
         retryButton.SetActive(true);
     }
 
     public void GoalPunel()
     {
         ClearPanel.SetActive(true);
+    }
+
+    public void TitleScene()
+    {
+        SceneManager.LoadScene("TitleScene");
     }
 }
