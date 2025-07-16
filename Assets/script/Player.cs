@@ -7,22 +7,23 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    private Vector2 moveDirection = Vector2.zero;
-    public bool isMoving = false;
-    SlidePuzzleSceneDirecter sceneDirecter;
-    Tile Tile;
-    StartTile startTile;
-    GoalTile goalTile;
+    public float moveSpeed = 5f;//プレイヤーの移動速度
+    private Vector2 moveDirection = Vector2.zero;//現在の移動方向
+    public bool isMoving = false;//プレイヤーが移動中かどうか
 
-    private Rigidbody2D rb;
-    private StartTile currentStartTile = null;    
-    private List<Tile> tiles = new List<Tile>();
-    Collider2D collider2d;
+    SlidePuzzleSceneDirecter sceneDirecter;//シーン移動用
+    Tile Tile;//通常タイル
+    StartTile startTile;//スタートタイル
+    GoalTile goalTile;//ゴールタイル
+
+    private Rigidbody2D rb;//プレイヤーのRB
+    private List<Tile> tiles = new List<Tile>();//全てのタイルのリリスト
+    Collider2D collider2d;//今いる位置のコライダー
 
 
     void Start()
     {
+        //各要素の取得
         rb = GetComponent<Rigidbody2D>();
         Tile =  FindObjectOfType<Tile>();
         startTile = FindObjectOfType<StartTile>();
@@ -36,58 +37,63 @@ public class Player : MonoBehaviour
     {
         if (isMoving)
         {
+            //移動中だけコライダー有効化(パネルが動かないようにする)
             startTile.EnableCollider();
             goalTile.EnableCollider();
+
             if(collider2d != null)
             {
-                
+                //道幅サイズに変更
                 foreach (var tile in tiles)
                 {
                     tile.ChangeMoveCollider();
                 }
             }
 
-            CheckOutOfScreen();
-
+            CheckOutOfScreen();//画面外チェック
 
         }
         else
         {
             foreach (var tile in tiles)
-            {
+            {   //コライダーをもとに戻す
                 tile.ResetCollider();
             }
         }
-
-
-        if (collider2d != null && collider2d.CompareTag("StartTile"))
-        {
-            currentStartTile = collider2d.GetComponent<StartTile>();
-        }
+        
     }
 
     void FixedUpdate()
     {
         if (isMoving)
-        {
+        {   //移動処理
             rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
-    {
+    {   
 
+        //触れたタイルが持つ情報を取得(触れたタイルのscriptを呼び出すため)
         Tile turnTile = other.GetComponent<Tile>();
 
+        //位置がスタートタイルの時
         if (other.CompareTag("StartTile"))
-        {
-            currentStartTile = other.GetComponent<StartTile>();
+        {   
+            if (startTile != null && other.GetComponent<StartTile>() == startTile)
+            {
+                moveDirection = startTile.startDirection.normalized;
+
+            }
+            startTile = other.GetComponent<StartTile>();
         }
 
+        // 曲がり角タイルに触れたときの処理
         if (other.CompareTag("TurnTile") && isMoving)
         {           
             if (turnTile != null)
             {
+                // 禁止されている方向から来た場合、移動停止
                 if (turnTile.IsBlockedFromDirection(-moveDirection))
                 {
                     isMoving = false;
@@ -98,6 +104,7 @@ public class Player : MonoBehaviour
                     return;
                 }
 
+                // 通過可能な方向なら、方向転換する
                 Vector2 newDir = turnTile.GetNewDirectionFrom(moveDirection);
                 if (newDir != Vector2.zero)
                 {
@@ -106,6 +113,7 @@ public class Player : MonoBehaviour
             }
         }
 
+        // ゴールタイルに触れたときの処理
         if (other.CompareTag("GoalTile"))
         {          
             isMoving = false;
@@ -114,32 +122,18 @@ public class Player : MonoBehaviour
             sceneDirecter.GoalPunel();
         }
 
-
-
     }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("StartTile"))
-        {
-            if (currentStartTile != null && other.GetComponent<StartTile>() == currentStartTile)
-            {
-                moveDirection = currentStartTile.startDirection.normalized;
-               
-                
-            }
-        }
-    }
-
-   
+   //タイルの情報を生成時に取得する為のセッター
     public void SetTiles(List<Tile> tileList)
     {
         tiles = tileList;
     }
 
     void CheckOutOfScreen()
-    {
+    {   
         Vector3 viewportPos = Camera.main.WorldToViewportPoint(transform.position);
+        //画面外判定
         if (viewportPos.x < 0 || viewportPos.x > 1 || viewportPos.y < 0 || viewportPos.y > 1 || this.transform.position.y > 3 || this.transform.position.y < -3)
         {
             Debug.Log("プレイヤーが画面外に出ました！");

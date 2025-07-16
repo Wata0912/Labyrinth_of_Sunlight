@@ -28,15 +28,16 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     new Vector3(-1.5f,-0.5f,0), new Vector3(-0.5f, -0.5f, 0), new Vector3(0.5f, -0.5f, 0), new Vector3(1.5f, -0.5f, 0),
     new Vector3(-1.5f,-1.5f,0), new Vector3(-0.5f, -1.5f, 0), new Vector3(0.5f, -1.5f, 0), new Vector3(1.5f, -1.5f, 0),};
 
+    // ステージ上の各座標位置（4x4グリッド）
     //ステージ１配置(仮)
     int[] piecesNum = {5,0,2,7,
                        1,3,5,7,
                         7,7,1,2,
                         7,7,6,5 };
 
-    GameObject freePiece;
+    GameObject freePiece;// 空白ピース（移動用）
 
-    //生成したピースを格納
+    // 実際に生成されたピースのリスト
     List<GameObject> movablePiece = new List<GameObject>();
     public List<Tile> allTilesScript = new List<Tile>();
    
@@ -66,7 +67,8 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(playerScript.isMoving == false)
+        // プレイヤーが停止中の場合のみスライド可能
+        if (playerScript.isMoving == false)
         {
             if (Input.GetMouseButton(0))
             {
@@ -84,10 +86,10 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
 
                 }
             }
-        }
-               
+        }               
     }
 
+    // 指定ピースと空白ピースが隣接していれば返す
     GameObject GetEmptyPiece(GameObject piece)
     {
         float dist = Vector2.Distance(piece.transform.position, freePiece.transform.position);
@@ -100,6 +102,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         return null;
     }
 
+    // 2つのピースを入れ替える
     void SwapPiece(GameObject pieceA, GameObject pieceB)
     {
         if (pieceA == null || pieceB == null )
@@ -122,6 +125,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
 
     }
 
+    // ピースを生成し、リストに追加
     public void CreatePiece(int index, Vector3 position, Quaternion rotation)
     {
         GameObject piece;
@@ -144,7 +148,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         }
     }
 
-    // シャッフルして表示順をランダムに
+    // シャッフル処理（指定回数ランダムに入れ替える）
     void ShufflePanels()
     {
        for(int i = 0; i < shuffCount; i++)
@@ -155,20 +159,23 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         }
     }
 
+    // 「スタート」ボタンで移動開始
     public void moveStart()
     {
         playerScript.isMoving = true;
         moveStartButton.SetActive(false);
     }
 
+    // 進入禁止や画面外などでミスしたときに呼ばれる
     public void miss()
     {          
         retryButton.SetActive(true);
     }
 
+    // ゴールに到達したときの処理
     public void GoalPunel()
     {
-        ClearPanel.SetActive(true);
+        ClearPanel.SetActive(true);        
     }
 
     public void TitleScene()
