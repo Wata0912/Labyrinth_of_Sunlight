@@ -23,4 +23,10 @@ public class GoalTile : MonoBehaviour
     {
         boxCollider2D.enabled = true;
     }
+
+    public void FalseCollider()
+    {
+        boxCollider2D = GetComponent<BoxCollider2D>();
+        boxCollider2D.enabled = false;
+    }
 }

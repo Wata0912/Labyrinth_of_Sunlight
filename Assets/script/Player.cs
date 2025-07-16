@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;//プレイヤーのRB
     private List<Tile> tiles = new List<Tile>();//全てのタイルのリリスト
     Collider2D collider2d;//今いる位置のコライダー
-
+    Collider2D collider;//今いる位置のコライダー
 
     void Start()
     {
@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
         Tile =  FindObjectOfType<Tile>();
         startTile = FindObjectOfType<StartTile>();
         collider2d = Physics2D.OverlapPoint(transform.position);
+        collider = GetComponent<BoxCollider2D>();
         goalTile = FindObjectOfType<GoalTile>();
         sceneDirecter = FindObjectOfType<SlidePuzzleSceneDirecter>();
         moveDirection = new Vector2(0, -1);
@@ -40,8 +41,9 @@ public class Player : MonoBehaviour
             //移動中だけコライダー有効化(パネルが動かないようにする)
             startTile.EnableCollider();
             goalTile.EnableCollider();
-
-            if(collider2d != null)
+            collider.enabled = true;
+            rb.isKinematic = true;
+            if (collider2d != null)
             {
                 //道幅サイズに変更
                 foreach (var tile in tiles)
@@ -55,6 +57,10 @@ public class Player : MonoBehaviour
         }
         else
         {
+            startTile.FalseCollider();
+            goalTile.FalseCollider();
+            collider.enabled = false;
+            rb.isKinematic = false;
             foreach (var tile in tiles)
             {   //コライダーをもとに戻す
                 tile.ResetCollider();

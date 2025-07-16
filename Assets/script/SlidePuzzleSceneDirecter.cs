@@ -19,14 +19,15 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     GameObject playerObj;
     public bool isStart = false;
     private Player playerScript;
-    
+    private int stage_id = 0;
+
     List<Vector2> startPositions;
 
     //ステージの座標
-    Vector3[] stagePos = {new Vector3(-1.5f,1.5f,0), new Vector3(-0.5f, 1.5f, 0), new Vector3(0.5f, 1.5f, 0), new Vector3(1.5f, 1.5f, 0),
-    new Vector3(-1.5f,0.5f,0), new Vector3(-0.5f, 0.5f, 0), new Vector3(0.5f, 0.5f, 0), new Vector3(1.5f, 0.5f, 0),
-    new Vector3(-1.5f,-0.5f,0), new Vector3(-0.5f, -0.5f, 0), new Vector3(0.5f, -0.5f, 0), new Vector3(1.5f, -0.5f, 0),
-    new Vector3(-1.5f,-1.5f,0), new Vector3(-0.5f, -1.5f, 0), new Vector3(0.5f, -1.5f, 0), new Vector3(1.5f, -1.5f, 0),};
+    Vector3[] stagePos =    {new Vector3(-1.5f,1.5f,0), new Vector3(-0.5f, 1.5f, 0), new Vector3(0.5f, 1.5f, 0), new Vector3(1.5f, 1.5f, 0),
+                            new Vector3(-1.5f,0.5f,0), new Vector3(-0.5f, 0.5f, 0), new Vector3(0.5f, 0.5f, 0), new Vector3(1.5f, 0.5f, 0),
+                            new Vector3(-1.5f,-0.5f,0), new Vector3(-0.5f, -0.5f, 0), new Vector3(0.5f, -0.5f, 0), new Vector3(1.5f, -0.5f, 0),
+                            new Vector3(-1.5f,-1.5f,0), new Vector3(-0.5f, -1.5f, 0), new Vector3(0.5f, -1.5f, 0), new Vector3(1.5f, -1.5f, 0),};
 
     // ステージ上の各座標位置（4x4グリッド）
     //ステージ１配置(仮)
@@ -181,5 +182,10 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     public void TitleScene()
     {
         SceneManager.LoadScene("TitleScene");
+    }
+
+    public void SetStageID(int id)
+    {
+        stage_id = id;
     }
 }

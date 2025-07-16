@@ -21,8 +21,6 @@ public class Tile : MonoBehaviour
         public Vector2 outgoingDirection; // o‚Ä‚¢‚­•ûŒü
     }
 
-    
-
     /// <summary>
     /// —ˆ‚½•ûŒü‚É‘Î‰‚·‚éo‚Ä‚¢‚­•ûŒü‚ğ•Ô‚·
     /// </summary>
