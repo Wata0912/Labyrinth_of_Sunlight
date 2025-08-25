@@ -209,10 +209,10 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     // ƒS[ƒ‹‚É“’B‚µ‚½‚Æ‚«‚Ìˆ—
     public void GoalPunel()
     {
+               
         ClearPanel.SetActive(true);
-
-
-
+        StartCoroutine(NetworkManager.Instance.LevelUP());
+        Debug.Log("LevelUP!!");
         PlayerPrefs.SetInt("ClearstageID", stage_id +1);
     }
 

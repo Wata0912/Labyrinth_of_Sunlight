@@ -195,40 +195,61 @@ public class NetworkManager : MonoBehaviour
     public IEnumerator ShowUser(Action<UpdateUserRequest> result)
     {
 
-        if (!File.Exists(Application.persistentDataPath + "/saveData.json"))
+        if (File.Exists(Application.persistentDataPath + "/saveData.json"))
         {
-            
-        }
-        var reader =
+            var reader =
                    new StreamReader(Application.persistentDataPath + "/saveData.json");
-        string json = reader.ReadToEnd();
-        reader.Close();
-        SaveData saveData = JsonConvert.DeserializeObject<SaveData>(json);
+            string json = reader.ReadToEnd();
+            reader.Close();
+            SaveData saveData = JsonConvert.DeserializeObject<SaveData>(json);
 
-        //ステージ一覧取得APIを実行
-        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/show");
-        // ヘッダー設定
-        request.SetRequestHeader("Content-Type", "application/json");
-        request.SetRequestHeader("Accept", "application/json");
-        request.SetRequestHeader("Authorization", "Bearer " + saveData.APIToken);
+            //ステージ一覧取得APIを実行
+            UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/show");
+            // ヘッダー設定
+            request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Accept", "application/json");
+            request.SetRequestHeader("Authorization", "Bearer " + saveData.APIToken);
 
-        yield return request.SendWebRequest();
-        if (request.result == UnityWebRequest.Result.Success
-        && request.responseCode == 200)
-        {
+            yield return request.SendWebRequest();
+            if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+            {
 
-            //結果を通知
-            //通信が成功した場合、返ってきたJSONをオブジェクトに変換
-            string resultJson = request.downloadHandler.text;
-            UpdateUserRequest user = JsonConvert.DeserializeObject<UpdateUserRequest>(resultJson);
-            result?.Invoke(user);
+                //結果を通知
+                //通信が成功した場合、返ってきたJSONをオブジェクトに変換
+                string resultJson = request.downloadHandler.text;
+                UpdateUserRequest user = JsonConvert.DeserializeObject<UpdateUserRequest>(resultJson);
+                result?.Invoke(user);
+            }
+            else
+            {
+                result?.Invoke(null);
+            }
         }
-        else
-        {
-            result?.Invoke(null);
-        }
+
     }
 
+    public IEnumerator LevelUP()
+    {
 
+        // WWWFormを使用（空のフォーム）
+        WWWForm form = new WWWForm();
+
+        if (File.Exists(Application.persistentDataPath + "/saveData.json"))
+        {
+            var reader =
+                   new StreamReader(Application.persistentDataPath + "/saveData.json");
+            string json = reader.ReadToEnd();
+            reader.Close();
+            SaveData saveData = JsonConvert.DeserializeObject<SaveData>(json);
+
+            UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/levelUP", form);
+            request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Accept", "application/json");
+            request.SetRequestHeader("Authorization", "Bearer " + saveData.APIToken);
+            yield return request.SendWebRequest();
+            
+        }
+    }
 }
 
