@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -19,7 +20,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     GameObject playerObj;
     public bool isStart = false;
     private Player playerScript;
-    private int stage_id = 0;
+    public int stage_id;
 
     List<Vector2> startPositions;
 
@@ -29,12 +30,9 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
                             new Vector3(-1.5f,-0.5f,0), new Vector3(-0.5f, -0.5f, 0), new Vector3(0.5f, -0.5f, 0), new Vector3(1.5f, -0.5f, 0),
                             new Vector3(-1.5f,-1.5f,0), new Vector3(-0.5f, -1.5f, 0), new Vector3(0.5f, -1.5f, 0), new Vector3(1.5f, -1.5f, 0),};
 
-    // ステージ上の各座標位置（4x4グリッド）
-    //ステージ１配置(仮)
-    int[] piecesNum = {5,0,2,7,
-                       1,3,5,7,
-                        7,7,1,2,
-                        7,7,6,5 };
+    
+    
+    
 
     GameObject freePiece;// 空白ピース（移動用）
 
@@ -49,20 +47,36 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         Instantiate(goalpieces, new Vector3(1.5f, -2.5f, 0), Quaternion.identity);
         playerObj = Instantiate(Player, new Vector3(-1.5f, 2.5f, 0), Quaternion.identity);
         playerScript = playerObj.GetComponent<Player>();
-
-
-        //ステージ生成
-        startPositions = new List<Vector2>();
-        for (int i = 0; i < stagePos.Length ; i++)
+    
+        stage_id = PlayerPrefs.GetInt("StageID", 0); // デフォルトは0
+        
+        Debug.Log(stage_id);
+      
+        
+        
+        StartCoroutine(NetworkManager.Instance.GetCell(objects =>
         {
-            CreatePiece(piecesNum[i], stagePos[i], Quaternion.identity);
-        }
+            if (objects != null)
+            {
+                foreach (var Cell in objects)
+                {
+                    CreatePiece(Cell.object_id, new Vector3(Cell.x, Cell.y, 0), Quaternion.identity);
+                }
 
-        playerScript.SetTiles(allTilesScript);
-        ShufflePanels();
+               
+                // Playerにタイルを渡すのもこのタイミングが安全
+                playerScript.SetTiles(allTilesScript);
+
+                // データが入ってからシャッフル開始
+                ShufflePanels();
+
+            }
+        },stage_id));
+        
 
         ClearPanel.SetActive(false);
         retryButton.SetActive(false);
+        PlayerPrefs.DeleteKey("StageID");
     }
 
     // Update is called once per frame
@@ -104,6 +118,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     }
 
     // 2つのピースを入れ替える
+    
     void SwapPiece(GameObject pieceA, GameObject pieceB)
     {
         if (pieceA == null || pieceB == null )
@@ -115,6 +130,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         pieceA.transform.position = pieceB.transform.position;
         pieceB.transform.position = position;
     }
+
 
     public void OnClickRetry()
     {
@@ -129,12 +145,14 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     // ピースを生成し、リストに追加
     public void CreatePiece(int index, Vector3 position, Quaternion rotation)
     {
+        index -= 1;//idを配列でつかえるように
+        Debug.Log($"CreatePiece 呼び出し index={index}, pos={position}");
         GameObject piece;
         if (index >= 0 && index < pieces.Count)
         {
             piece = Instantiate(pieces[index], position, rotation);
             movablePiece.Add(piece);
-            startPositions.Add(piece.transform.position);
+            //startPositions.Add(piece.transform.position);
             Tile tileScript = piece.GetComponent<Tile>();
             allTilesScript.Add(tileScript);
             if(index == 6)
@@ -151,8 +169,23 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
 
     // シャッフル処理（指定回数ランダムに入れ替える）
     void ShufflePanels()
-    {
+    {   /*
        for(int i = 0; i < shuffCount; i++)
+        {
+            int rnd = UnityEngine.Random.Range(0, movablePiece.Count);
+            GameObject piece = movablePiece[rnd];
+            SwapPiece(piece, movablePiece[0]);
+        }
+        
+        // シャッフルできるピースが 2 つ以上あるか確認
+        if (movablePiece == null || movablePiece.Count < 2)
+        {
+            Debug.LogWarning("シャッフルできるピースが足りません");
+            return;
+        }
+        */
+
+        for (int i = 0; i < shuffCount; i++)
         {
             int rnd = UnityEngine.Random.Range(0, movablePiece.Count);
             GameObject piece = movablePiece[rnd];
@@ -176,16 +209,27 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     // ゴールに到達したときの処理
     public void GoalPunel()
     {
-        ClearPanel.SetActive(true);        
+        ClearPanel.SetActive(true);
+
+
+
+        PlayerPrefs.SetInt("ClearstageID", stage_id +1);
     }
 
-    public void TitleScene()
+    public void SelectStageScene()
     {
-        SceneManager.LoadScene("TitleScene");
+        SceneManager.LoadScene("SelectStageScene");
     }
 
-    public void SetStageID(int id)
+    public void ReLoadScene()
     {
-        stage_id = id;
+        if(stage_id == 2)
+        {
+            stage_id -= 1;
+        }
+
+        PlayerPrefs.SetInt("StageID", stage_id+ 1);        
+
+        SceneManager.LoadScene("SlidePuzzleScene");
     }
 }

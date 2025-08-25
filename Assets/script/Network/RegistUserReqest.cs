@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class TitleDirecter : MonoBehaviour
+public class RegistUserReqest : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -15,10 +14,5 @@ public class TitleDirecter : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public void gameScene()
-    {
-        SceneManager.LoadScene("SelectStageScene");
     }
 }

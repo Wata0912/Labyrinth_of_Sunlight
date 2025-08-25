@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -4604798442222911366}
   - component: {fileID: -4567612900076915834}
   m_Layer: 0
-  m_Name: piece_00
+  m_Name: slidePiece
   m_TagString: TurnTile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
