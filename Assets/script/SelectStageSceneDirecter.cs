@@ -2,16 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SelectStageSceneDirecter : MonoBehaviour
 {
     SlidePuzzleSceneDirecter slide;
     [SerializeField]List<GameObject> stageSelectButton;
+    [SerializeField] Text userText;
+    [SerializeField] Text levelText;
     int clearStageID;
 
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(NetworkManager.Instance.ShowUser(user =>
+        {
+            if (user != null)
+            {
+                userText.text = user.Name;
+                levelText.text = user.Level.ToString();
+                Debug.Log($"Name:{user.Name}, Level:{user.Level}");
+            }
+        }));
+
+
+
         for (int i = 0; i < 4 + 1; i++)
         {
             stageSelectButton[i].SetActive(false);

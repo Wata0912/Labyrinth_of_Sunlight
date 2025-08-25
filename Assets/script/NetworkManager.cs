@@ -146,31 +146,7 @@ public class NetworkManager : MonoBehaviour
 
     }
 
-    //ステージ一覧取得処理
-    public IEnumerator GetStage(Action<StageResponse[]> result)
-    {
-        //ステージ一覧取得APIを実行
-        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "stages/index");
-        yield return request.SendWebRequest();
-        if (request.result == UnityWebRequest.Result.Success
-        && request.responseCode == 200)
-        {
-
-            //結果を通知
-            //通信が成功した場合、返ってきたJSONをオブジェクトに変換
-            string resultJson = request.downloadHandler.text;
-            Debug.Log("レスポンス: " + resultJson);
-            StageResponse[] stages = JsonConvert.DeserializeObject<StageResponse[]>(resultJson);
-            result?.Invoke(stages);
-        }
-        else
-        {
-            result?.Invoke(null);
-        }
-
-    }
-
-    public IEnumerator GetCell(Action<CellResponse[]> result , int id)
+    public IEnumerator GetCell(Action<CellResponse[]> result, int id)
     {
         //ステージ一覧取得APIを実行
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "stages/get/" + id);
@@ -192,5 +168,67 @@ public class NetworkManager : MonoBehaviour
         }
 
     }
+
+    //ステージ一覧取得処理
+    public IEnumerator GetStage(Action<StageResponse[]> result)
+    {
+        //ステージ一覧取得APIを実行
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "stages/index");
+        yield return request.SendWebRequest();
+        if (request.result == UnityWebRequest.Result.Success
+        && request.responseCode == 200)
+        {
+
+            //結果を通知
+            //通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            StageResponse[] stages = JsonConvert.DeserializeObject<StageResponse[]>(resultJson);
+            result?.Invoke(stages);
+        }
+        else
+        {
+            result?.Invoke(null);
+        }
+
+    }
+
+    public IEnumerator ShowUser(Action<UpdateUserRequest> result)
+    {
+
+        if (!File.Exists(Application.persistentDataPath + "/saveData.json"))
+        {
+            
+        }
+        var reader =
+                   new StreamReader(Application.persistentDataPath + "/saveData.json");
+        string json = reader.ReadToEnd();
+        reader.Close();
+        SaveData saveData = JsonConvert.DeserializeObject<SaveData>(json);
+
+        //ステージ一覧取得APIを実行
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/show");
+        // ヘッダー設定
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.SetRequestHeader("Accept", "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + saveData.APIToken);
+
+        yield return request.SendWebRequest();
+        if (request.result == UnityWebRequest.Result.Success
+        && request.responseCode == 200)
+        {
+
+            //結果を通知
+            //通信が成功した場合、返ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;
+            UpdateUserRequest user = JsonConvert.DeserializeObject<UpdateUserRequest>(resultJson);
+            result?.Invoke(user);
+        }
+        else
+        {
+            result?.Invoke(null);
+        }
+    }
+
+
 }
 
