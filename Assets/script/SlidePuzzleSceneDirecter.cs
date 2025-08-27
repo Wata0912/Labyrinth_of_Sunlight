@@ -24,16 +24,6 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
 
     List<Vector2> startPositions;
 
-    //ステージの座標
-    Vector3[] stagePos =    {new Vector3(-1.5f,1.5f,0), new Vector3(-0.5f, 1.5f, 0), new Vector3(0.5f, 1.5f, 0), new Vector3(1.5f, 1.5f, 0),
-                            new Vector3(-1.5f,0.5f,0), new Vector3(-0.5f, 0.5f, 0), new Vector3(0.5f, 0.5f, 0), new Vector3(1.5f, 0.5f, 0),
-                            new Vector3(-1.5f,-0.5f,0), new Vector3(-0.5f, -0.5f, 0), new Vector3(0.5f, -0.5f, 0), new Vector3(1.5f, -0.5f, 0),
-                            new Vector3(-1.5f,-1.5f,0), new Vector3(-0.5f, -1.5f, 0), new Vector3(0.5f, -1.5f, 0), new Vector3(1.5f, -1.5f, 0),};
-
-    
-    
-    
-
     GameObject freePiece;// 空白ピース（移動用）
 
     // 実際に生成されたピースのリスト
@@ -51,9 +41,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         stage_id = PlayerPrefs.GetInt("StageID", 0); // デフォルトは0
         
         Debug.Log(stage_id);
-      
-        
-        
+             
         StartCoroutine(NetworkManager.Instance.GetCell(objects =>
         {
             if (objects != null)
@@ -61,19 +49,15 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
                 foreach (var Cell in objects)
                 {
                     CreatePiece(Cell.object_id, new Vector3(Cell.x, Cell.y, 0), Quaternion.identity);
-                }
-
-               
+                }             
                 // Playerにタイルを渡すのもこのタイミングが安全
                 playerScript.SetTiles(allTilesScript);
 
                 // データが入ってからシャッフル開始
                 ShufflePanels();
-
             }
         },stage_id));
         
-
         ClearPanel.SetActive(false);
         retryButton.SetActive(false);
         PlayerPrefs.DeleteKey("StageID");
@@ -113,12 +97,10 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         {
             return freePiece;
         }
-
         return null;
     }
 
-    // 2つのピースを入れ替える
-    
+    // 2つのピースを入れ替える  
     void SwapPiece(GameObject pieceA, GameObject pieceB)
     {
         if (pieceA == null || pieceB == null )
@@ -131,15 +113,12 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         pieceB.transform.position = position;
     }
 
-
     public void OnClickRetry()
-    {
-        
+    {     
         retryButton.SetActive(false);
         playerObj.transform.position = new Vector3(-1.5f, 2.5f, 0);
 
         moveStartButton.SetActive(true);
-
     }
 
     // ピースを生成し、リストに追加
@@ -169,22 +148,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
 
     // シャッフル処理（指定回数ランダムに入れ替える）
     void ShufflePanels()
-    {   /*
-       for(int i = 0; i < shuffCount; i++)
-        {
-            int rnd = UnityEngine.Random.Range(0, movablePiece.Count);
-            GameObject piece = movablePiece[rnd];
-            SwapPiece(piece, movablePiece[0]);
-        }
-        
-        // シャッフルできるピースが 2 つ以上あるか確認
-        if (movablePiece == null || movablePiece.Count < 2)
-        {
-            Debug.LogWarning("シャッフルできるピースが足りません");
-            return;
-        }
-        */
-
+    { 
         for (int i = 0; i < shuffCount; i++)
         {
             int rnd = UnityEngine.Random.Range(0, movablePiece.Count);
@@ -220,7 +184,6 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     {
         SceneManager.LoadScene("SelectStageScene");
     }
-
     public void ReLoadScene()
     {
         if(stage_id == 2)

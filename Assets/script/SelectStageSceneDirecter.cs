@@ -10,6 +10,7 @@ public class SelectStageSceneDirecter : MonoBehaviour
     [SerializeField]List<GameObject> stageSelectButton;
     [SerializeField] Text userText;
     [SerializeField] Text levelText;
+    Text buttonText;
     int clearStageID;
 
     // Start is called before the first frame update
@@ -25,8 +26,6 @@ public class SelectStageSceneDirecter : MonoBehaviour
             }
         }));
 
-
-
         for (int i = 0; i < 4 + 1; i++)
         {
             stageSelectButton[i].SetActive(false);
@@ -39,28 +38,22 @@ public class SelectStageSceneDirecter : MonoBehaviour
                 foreach (var stage in stages)
                 {
                     Debug.Log($"Stage ID: {stage.id}, Name: {stage.name}");
-                    stageSelectButton[stage.id].SetActive(true);
+                    stageSelectButton[stage.id-1].SetActive(true);
+                    buttonText = stageSelectButton[stage.id - 1].GetComponentInChildren<Text>();
+                    buttonText.text = stage.name;
                 }
 
             }
         }));
-      
-
-        
+             
             clearStageID = PlayerPrefs.GetInt("ClearstageID", 0); // デフォルトは0
-        
-
-        
+              
         PlayerPrefs.DeleteKey("ClearstageID");
         
         if(clearStageID > stageSelectButton.Count || clearStageID < 0)
         {
             clearStageID = 0;
-        }
-        
-
-        
-        
+        }      
     }
 
     // Update is called once per frame
@@ -69,13 +62,10 @@ public class SelectStageSceneDirecter : MonoBehaviour
         
     }
 
-
     public  void PlayStart(int stageNum)
     {
-
         PlayerPrefs.SetInt("StageID", stageNum);
-        SceneManager.LoadScene("SlidePuzzleScene");
-        
+        SceneManager.LoadScene("SlidePuzzleScene");   
     }
     
     public void Exit()
