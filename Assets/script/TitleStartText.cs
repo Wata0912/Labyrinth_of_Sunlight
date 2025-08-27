@@ -24,8 +24,6 @@ public class TitleStartText : MonoBehaviour
     [SerializeField]
     Color32 endColor = new Color32(255, 255, 255, 64);
 
-
-
     //インスペクターから設定した場合は、GetComponentする必要がなくなる為、Awakeを削除しても良い。
     void Awake()
     {

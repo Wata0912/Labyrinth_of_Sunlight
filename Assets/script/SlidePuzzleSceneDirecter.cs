@@ -177,6 +177,8 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         ClearPanel.SetActive(true);
         StartCoroutine(NetworkManager.Instance.LevelUP());
         Debug.Log("LevelUP!!");
+        StartCoroutine(NetworkManager.Instance.GetItem(stage_id));
+        Debug.Log("アイテムゲット!!");
         PlayerPrefs.SetInt("ClearstageID", stage_id +1);
     }
 

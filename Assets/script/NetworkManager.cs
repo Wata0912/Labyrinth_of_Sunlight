@@ -248,8 +248,30 @@ public class NetworkManager : MonoBehaviour
             request.SetRequestHeader("Accept", "application/json");
             request.SetRequestHeader("Authorization", "Bearer " + saveData.APIToken);
             yield return request.SendWebRequest();
+
+        }
+    }
+    public IEnumerator GetItem(int stage_id)
+    {
+        if (File.Exists(Application.persistentDataPath + "/saveData.json"))
+        {
+            var reader =
+                   new StreamReader(Application.persistentDataPath + "/saveData.json");
+            string json = reader.ReadToEnd();
+            reader.Close();
+            SaveData saveData = JsonConvert.DeserializeObject<SaveData>(json);
+
+            ItemReqest item = new ItemReqest();
+            item.id = stage_id;
+            string itemJson = JsonConvert.SerializeObject(item);
+
+            UnityWebRequest request = UnityWebRequest.Post(
+                   API_BASE_URL + "items/get", itemJson, "application/json");
+            request.SetRequestHeader("Authorization", "Bearer " + saveData.APIToken);
+
+            yield return request.SendWebRequest();
             
         }
     }
-}
 
+}
