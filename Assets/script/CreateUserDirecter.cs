@@ -7,12 +7,12 @@ using UnityEngine.UI;
 
 public class CreateUserDirecter : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField tmpInputField;
+    [SerializeField] private InputField inputField;
     // Start is called before the first frame update
     void Start()
     {
-        if (tmpInputField == null)
-            tmpInputField = GetComponent<TMP_InputField>();       
+        if (inputField == null)
+            inputField = GetComponent<InputField>();       
     }
 
     // Update is called once per frame
@@ -23,7 +23,7 @@ public class CreateUserDirecter : MonoBehaviour
 
     public void CreateUser()
     {
-        string inputText = tmpInputField.text;
+        string inputText = inputField.text;
 
         //ユーザーデータが保存されてない場合は登録
         StartCoroutine(NetworkManager.Instance.RegistUser(

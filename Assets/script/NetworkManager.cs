@@ -270,8 +270,68 @@ public class NetworkManager : MonoBehaviour
             request.SetRequestHeader("Authorization", "Bearer " + saveData.APIToken);
 
             yield return request.SendWebRequest();
-            
+            if (request.responseCode == 200)
+            {
+                Debug.Log("アイテム取得済み");
+
+            }
+            else if (request.responseCode == 201)
+            {
+                Debug.Log("新しいアイテムを取得しました！");               
+                StartCoroutine(Instance.LevelUP());
+                Debug.Log("LevelUP!!");
+            }
+            else
+            {
+                // エラー処理
+                Debug.LogError("API Error: " + request.error);
+            }
+
         }
     }
 
+    public IEnumerator HaveItem(Action<ItemReqest[]> result)
+    {
+        if (File.Exists(Application.persistentDataPath + "/saveData.json"))
+        {
+            var reader = new StreamReader(Application.persistentDataPath + "/saveData.json");
+            string json = reader.ReadToEnd();
+            reader.Close();
+            SaveData saveData = JsonConvert.DeserializeObject<SaveData>(json);
+
+            // アイテム一覧取得APIを実行
+            UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/items");
+            // ヘッダー設定
+            request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Accept", "application/json");
+            request.SetRequestHeader("Authorization", "Bearer " + saveData.APIToken);
+
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success && request.responseCode == 200)
+            {
+                // 結果を通知
+                // 通信が成功した場合、返ってきたJSONをオブジェクトに変換
+                string resultJson = request.downloadHandler.text;
+                ItemReqest[] items = JsonConvert.DeserializeObject<ItemReqest[]>(resultJson);
+                result?.Invoke(items);
+            }
+            else
+            {
+                Debug.LogError($"API通信エラー: {request.error} - ResponseCode: {request.responseCode}");
+                result?.Invoke(null);
+            }
+        }
+        else
+        {
+            Debug.LogError("セーブデータが見つかりません");
+            result?.Invoke(null);
+        }
+    }
 }
+    
+
+
+
+
+
