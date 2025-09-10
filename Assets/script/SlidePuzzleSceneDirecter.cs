@@ -17,10 +17,12 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     [SerializeField] GameObject Player;
     [SerializeField] GameObject startButton;
     [SerializeField] GameObject ClearPanel;
+    [SerializeField] GameObject pauseMenuUI; 
     GameObject playerObj;
     public bool isStart = false;
     private Player playerScript;
     public int stage_id;
+    public static bool isPaused = false;
 
     List<Vector2> startPositions;
 
@@ -38,7 +40,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         playerObj = Instantiate(Player, new Vector3(-1.5f, 2.5f, 0), Quaternion.identity);
         playerScript = playerObj.GetComponent<Player>();
     
-        stage_id = PlayerPrefs.GetInt("StageID", 0); // デフォルトは0
+        stage_id = PlayerPrefs.GetInt("StageID", 1); // デフォルトは0
         
         Debug.Log(stage_id);
              
@@ -56,6 +58,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
                 // データが入ってからシャッフル開始
                 ShufflePanels();
             }
+            
         },stage_id));
         
         ClearPanel.SetActive(false);
@@ -85,7 +88,21 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
 
                 }
             }
-        }               
+        }
+        
+        // ESCキーでポーズ切り替え
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isPaused)
+            {
+                Resume();
+            }
+            else
+            {
+                Pause();
+            }
+        }
+        
     }
 
     // 指定ピースと空白ピースが隣接していれば返す
@@ -186,13 +203,37 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     }
     public void ReLoadScene()
     {
-        if(stage_id == 2)
+        StartCoroutine(NetworkManager.Instance.GetStage(stages =>
         {
-            stage_id -= 1;
-        }
+            if (stages != null)
+            {
+                if(stages.Length == stage_id)
+                {
+                    SceneManager.LoadScene("SelectStageScene");
+                }
+                else
+                {
+                    PlayerPrefs.SetInt("StageID", stage_id + 1);
 
-        PlayerPrefs.SetInt("StageID", stage_id+ 1);        
+                    SceneManager.LoadScene("SlidePuzzleScene");
+                }
+            }
 
-        SceneManager.LoadScene("SlidePuzzleScene");
+        }));
+       
+    }
+
+    public void Resume()
+    {
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = 1f; // 時間を通常に戻す
+        isPaused = false;
+    }
+
+    public void Pause()
+    {
+        pauseMenuUI.SetActive(true);
+        Time.timeScale = 0f; // ゲーム内時間を止める
+        isPaused = true;
     }
 }

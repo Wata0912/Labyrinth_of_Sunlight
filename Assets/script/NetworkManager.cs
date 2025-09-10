@@ -4,7 +4,6 @@ using UnityEngine;
 using Newtonsoft.Json;
 using System;
 using UnityEngine.Networking;
-using UnityEditor.PackageManager.Requests;
 using System.IO;
 
 
@@ -16,7 +15,7 @@ public class NetworkManager : MonoBehaviour
     const string API_BASE_URL = "http://localhost:8000/api/";
 #else
   // 本番環境で使用する値をセット
-  const string API_BASE_URL = "https://…azure.com/api/";
+  const string API_BASE_URL = "http://ge202411.japaneast.cloudapp.azure.com/api/";
 #endif
 
     //private int userID; // 自分のユーザーID
@@ -24,7 +23,6 @@ public class NetworkManager : MonoBehaviour
     private string userName; // 入力される想定の自分のユーザー名
 
     // プロパティ
-
     public string UserName
     {
         get
@@ -47,8 +45,6 @@ public class NetworkManager : MonoBehaviour
             return instance;
         }
     }
-
-    // 通信用の関数
 
     //ユーザー登録処理
     public IEnumerator RegistUser(string name, int level, Action<bool> result)
@@ -231,22 +227,24 @@ public class NetworkManager : MonoBehaviour
 
     public IEnumerator LevelUP()
     {
-
         // WWWFormを使用（空のフォーム）
         WWWForm form = new WWWForm();
 
         if (File.Exists(Application.persistentDataPath + "/saveData.json"))
-        {
+        {   
+            //セーブデータファイル読み取り
             var reader =
                    new StreamReader(Application.persistentDataPath + "/saveData.json");
             string json = reader.ReadToEnd();
+            //読み取り終了
             reader.Close();
+            //セーブデータをデシリアライズ
             SaveData saveData = JsonConvert.DeserializeObject<SaveData>(json);
-
-            UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/levelUP", form);
+            //レベルアップの為のリクエスト
+            UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/levelUP", form);//Jsonのオブジェクトを送る必要がないので空のフォームを送信
             request.SetRequestHeader("Content-Type", "application/json");
             request.SetRequestHeader("Accept", "application/json");
-            request.SetRequestHeader("Authorization", "Bearer " + saveData.APIToken);
+            request.SetRequestHeader("Authorization", "Bearer " + saveData.APIToken);//ユーザーのトークン送信
             yield return request.SendWebRequest();
 
         }

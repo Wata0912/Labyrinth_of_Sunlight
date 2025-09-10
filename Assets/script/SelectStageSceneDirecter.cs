@@ -12,6 +12,7 @@ public class SelectStageSceneDirecter : MonoBehaviour
     [SerializeField] Text levelText;
     Text buttonText;
     int clearStageID;
+    int userLevel;
 
     // Start is called before the first frame update
     void Start()
@@ -22,29 +23,53 @@ public class SelectStageSceneDirecter : MonoBehaviour
             {
                 userText.text = user.Name;
                 levelText.text = user.Level.ToString();
+                userLevel = user.Level;
                 Debug.Log($"Name:{user.Name}, Level:{user.Level}");
+
+                StartCoroutine(NetworkManager.Instance.GetStage(stages =>
+                {
+                    if (stages != null)
+                    {
+                        foreach (var stage in stages)
+                        {
+                            if (stage.id <= userLevel)
+                            {
+                                Debug.Log($"Stage ID: {stage.id}, Name: {stage.name}");
+                                stageSelectButton[stage.id - 1].SetActive(true);
+                                buttonText = stageSelectButton[stage.id - 1].GetComponentInChildren<Text>();
+                                buttonText.text = stage.name;
+                            }
+
+                        }
+
+                    }
+                }));
             }
         }));
 
-        for (int i = 0; i < 4 + 1; i++)
+        for (int i = 0; i < stageSelectButton.Count; i++)
         {
             stageSelectButton[i].SetActive(false);
         }
 
-        StartCoroutine(NetworkManager.Instance.GetStage(stages =>
-        {
-            if (stages != null)
-            {
-                foreach (var stage in stages)
-                {
-                    Debug.Log($"Stage ID: {stage.id}, Name: {stage.name}");
-                    stageSelectButton[stage.id-1].SetActive(true);
-                    buttonText = stageSelectButton[stage.id - 1].GetComponentInChildren<Text>();
-                    buttonText.text = stage.name;
-                }
+        //StartCoroutine(NetworkManager.Instance.GetStage(stages =>
+        //{
+        //    if (stages != null)
+        //    {
+        //        foreach (var stage in stages)
+        //        {
+        //                if(stage.id <= userLevel)
+        //            {
+        //                Debug.Log($"Stage ID: {stage.id}, Name: {stage.name}");
+        //                stageSelectButton[stage.id - 1].SetActive(true);
+        //                buttonText = stageSelectButton[stage.id - 1].GetComponentInChildren<Text>();
+        //                buttonText.text = stage.name;
+        //            }
+                       
+        //        }
 
-            }
-        }));
+        //    }
+        //}));
              
             clearStageID = PlayerPrefs.GetInt("ClearstageID", 0); // デフォルトは0
               
@@ -73,4 +98,8 @@ public class SelectStageSceneDirecter : MonoBehaviour
         SceneManager.LoadScene("TitleScene");
     }
 
+    public void ItemScene()
+    {
+        SceneManager.LoadScene("ItemScene");
+    }
 }

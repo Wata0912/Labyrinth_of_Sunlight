@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SlidePuzzleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/ItemScene.unity
+    guid: 0e0ce7e841b6e4f4a8293a7ac371b92e
   m_configObjects: {}
