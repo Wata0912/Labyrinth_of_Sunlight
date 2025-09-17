@@ -8,11 +8,15 @@ using UnityEngine.UI;
 public class CreateUserDirecter : MonoBehaviour
 {
     [SerializeField] private InputField inputField;
+    
+    
     // Start is called before the first frame update
     void Start()
     {
         if (inputField == null)
-            inputField = GetComponent<InputField>();       
+            inputField = GetComponent<InputField>();
+        
+        
     }
 
     // Update is called once per frame
@@ -41,4 +45,6 @@ public class CreateUserDirecter : MonoBehaviour
            }
        }));
     }
+
+    
 }

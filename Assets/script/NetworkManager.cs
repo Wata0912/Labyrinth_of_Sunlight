@@ -12,10 +12,10 @@ public class NetworkManager : MonoBehaviour
     // WebAPIの接続先を設定
 #if DEBUG
     // 開発環境で使用する値をセット
-    const string API_BASE_URL = "http://localhost:8000/api/";
+    static string API_BASE_URL = "http://localhost:8000/api/";
 #else
   // 本番環境で使用する値をセット
-  const string API_BASE_URL = "http://ge202411.japaneast.cloudapp.azure.com/api/";
+    static string API_BASE_URL = "http://ge202411.japaneast.cloudapp.azure.com/api/";
 #endif
 
     //private int userID; // 自分のユーザーID
@@ -30,6 +30,8 @@ public class NetworkManager : MonoBehaviour
             return this.userName;
         }
     }
+
+    
 
     private static NetworkManager instance;
     public static NetworkManager Instance
