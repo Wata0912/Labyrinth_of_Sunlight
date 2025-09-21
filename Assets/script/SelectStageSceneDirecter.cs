@@ -90,16 +90,19 @@ public class SelectStageSceneDirecter : MonoBehaviour
     public  void PlayStart(int stageNum)
     {
         PlayerPrefs.SetInt("StageID", stageNum);
-        SceneManager.LoadScene("SlidePuzzleScene");   
+        //SceneManager.LoadScene("SlidePuzzleScene");
+        Initiate.Fade("SlidePuzzleScene", Color.black, 1.0f);
     }
     
     public void Exit()
     {
-        SceneManager.LoadScene("TitleScene");
+        //SceneManager.LoadScene("TitleScene");
+        Initiate.Fade("TitleScene", Color.black, 1.0f);
     }
 
     public void ItemScene()
     {
-        SceneManager.LoadScene("ItemScene");
+        //SceneManager.LoadScene("ItemScene");
+        Initiate.Fade("ItemScene", Color.black, 1.0f);
     }
 }

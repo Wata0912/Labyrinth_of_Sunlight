@@ -199,7 +199,8 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
 
     public void SelectStageScene()
     {
-        SceneManager.LoadScene("SelectStageScene");
+        //SceneManager.LoadScene("SelectStageScene");
+        Initiate.Fade("SelectStageScene", Color.black, 1.0f);
     }
     public void ReLoadScene()
     {
@@ -209,13 +210,15 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
             {
                 if(stages.Length == stage_id)
                 {
-                    SceneManager.LoadScene("SelectStageScene");
+                    //SceneManager.LoadScene("SelectStageScene");
+                    Initiate.Fade("SelectStageScene", Color.black, 1.0f);
                 }
                 else
                 {
                     PlayerPrefs.SetInt("StageID", stage_id + 1);
 
-                    SceneManager.LoadScene("SlidePuzzleScene");
+                    //SceneManager.LoadScene("SlidePuzzleScene");
+                    Initiate.Fade("SlidePuzzleScene", Color.black, 1.0f);
                 }
             }
 
@@ -235,5 +238,23 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f; // ゲーム内時間を止める
         isPaused = true;
+    }
+
+    public void Retire()
+    {
+        // まず時間を戻す
+        Time.timeScale = 1f;
+        isPaused = false;
+
+        // それからUIを閉じる
+        pauseMenuUI.SetActive(false);
+
+        Debug.Log("リタイア");
+        SceneManager.LoadScene("SelectStageScene", LoadSceneMode.Single);
+    }
+
+    public void TestClick()
+    {
+        Debug.Log("ボタン押された！");
     }
 }

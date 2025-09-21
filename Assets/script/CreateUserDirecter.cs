@@ -36,7 +36,8 @@ public class CreateUserDirecter : MonoBehaviour
        {                          //“o˜^I—¹Œã‚Ìˆ—
            if (result == true)
            {
-               SceneManager.LoadScene("SelectStageScene");
+               //SceneManager.LoadScene("SelectStageScene");
+               Initiate.Fade("SelectStageScene", Color.black, 1.0f);
            }
            else
            {

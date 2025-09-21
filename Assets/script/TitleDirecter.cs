@@ -13,11 +13,14 @@ public class TitleDirecter : MonoBehaviour
         bool isSuccess = NetworkManager.Instance.LoadUserData();
         if (isSuccess)
         {
-            SceneManager.LoadScene("SelectStageScene");
+            //SceneManager.LoadScene("SelectStageScene");
+            Initiate.Fade("SelectStageScene", Color.black, 1.0f);
+
         }
         else
         {
-            SceneManager.LoadScene("CreateUserScene");
+            //SceneManager.LoadScene("CreateUserScene");
+            Initiate.Fade("CreateUserScene", Color.black, 1.0f);
 
         }
     }

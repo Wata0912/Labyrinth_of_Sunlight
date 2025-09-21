@@ -60,7 +60,8 @@ public class ItemDex : MonoBehaviour
 
     public void Exit()
     {
-        SceneManager.LoadScene("SelectStageScene");
+        //SceneManager.LoadScene("SelectStageScene");
+        Initiate.Fade("SelectStageScene", Color.black, 1.0f);
     }
 
 }
