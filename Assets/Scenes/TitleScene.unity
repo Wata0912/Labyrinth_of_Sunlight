@@ -813,7 +813,7 @@ GameObject:
   - component: {fileID: 2132969118}
   - component: {fileID: 2132969120}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: TitleDirecter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -831,6 +831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b65166446e54bb44182723d1e21ca882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sound1: {fileID: 8300000, guid: aa7df29cf9c82bb4a9fde5e1d80de612, type: 3}
 --- !u!4 &2132969119
 Transform:
   m_ObjectHideFlags: 0

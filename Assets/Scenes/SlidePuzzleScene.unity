@@ -1024,6 +1024,9 @@ MonoBehaviour:
   isStart: 0
   stage_id: 0
   allTilesScript: []
+  sound1: {fileID: 8300000, guid: aa7df29cf9c82bb4a9fde5e1d80de612, type: 3}
+  sound2: {fileID: 8300000, guid: 6b56ae379ddd9924285685fea5ff5796, type: 3}
+  sound3: {fileID: 8300000, guid: 2f2986700240d0d488220f46167d5352, type: 3}
 --- !u!4 &847412989
 Transform:
   m_ObjectHideFlags: 0

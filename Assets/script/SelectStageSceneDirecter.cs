@@ -13,6 +13,9 @@ public class SelectStageSceneDirecter : MonoBehaviour
     Text buttonText;
     int clearStageID;
     int userLevel;
+    AudioSource audioSource;
+    public AudioClip sound1;
+    bool click;
 
     // Start is called before the first frame update
     void Start()
@@ -78,7 +81,10 @@ public class SelectStageSceneDirecter : MonoBehaviour
         if(clearStageID > stageSelectButton.Count || clearStageID < 0)
         {
             clearStageID = 0;
-        }      
+        }
+
+        audioSource = GetComponent<AudioSource>();
+        click = false;
     }
 
     // Update is called once per frame
@@ -89,20 +95,46 @@ public class SelectStageSceneDirecter : MonoBehaviour
 
     public  void PlayStart(int stageNum)
     {
-        PlayerPrefs.SetInt("StageID", stageNum);
-        //SceneManager.LoadScene("SlidePuzzleScene");
-        Initiate.Fade("SlidePuzzleScene", Color.black, 1.0f);
+       
+            PlayerPrefs.SetInt("StageID", stageNum);
+            //SceneManager.LoadScene("SlidePuzzleScene");
+            Initiate.Fade("SlidePuzzleScene", Color.black, 1.0f);
+          
+        if (click == false)
+        {
+            audioSource.PlayOneShot(sound1);
+            click = true;
+        }
+
+
     }
     
     public void Exit()
     {
-        //SceneManager.LoadScene("TitleScene");
-        Initiate.Fade("TitleScene", Color.black, 1.0f);
+              
+            //SceneManager.LoadScene("TitleScene");
+            Initiate.Fade("TitleScene", Color.black, 1.0f);
+            
+        if (click == false)
+        {
+            audioSource.PlayOneShot(sound1);
+            click = true;
+        }
+
     }
 
     public void ItemScene()
     {
-        //SceneManager.LoadScene("ItemScene");
-        Initiate.Fade("ItemScene", Color.black, 1.0f);
+        
+            //SceneManager.LoadScene("ItemScene");
+            Initiate.Fade("ItemScene", Color.black, 1.0f);
+            
+        if (click == false)
+        {
+            audioSource.PlayOneShot(sound1);
+            click = true;
+        }
+
+
     }
 }

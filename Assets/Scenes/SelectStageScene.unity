@@ -656,6 +656,7 @@ MonoBehaviour:
   - {fileID: 1585022602}
   userText: {fileID: 1490720793}
   levelText: {fileID: 127407374}
+  sound1: {fileID: 8300000, guid: aa7df29cf9c82bb4a9fde5e1d80de612, type: 3}
 --- !u!4 &243033577
 Transform:
   m_ObjectHideFlags: 0

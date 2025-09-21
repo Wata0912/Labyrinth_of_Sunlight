@@ -8,15 +8,18 @@ using UnityEngine.UI;
 public class CreateUserDirecter : MonoBehaviour
 {
     [SerializeField] private InputField inputField;
-    
-    
+    AudioSource audioSource;
+    public AudioClip sound1;
+    bool click;
+
     // Start is called before the first frame update
     void Start()
     {
         if (inputField == null)
             inputField = GetComponent<InputField>();
-        
-        
+        audioSource = GetComponent<AudioSource>();
+        click = false;
+
     }
 
     // Update is called once per frame
@@ -38,6 +41,11 @@ public class CreateUserDirecter : MonoBehaviour
            {
                //SceneManager.LoadScene("SelectStageScene");
                Initiate.Fade("SelectStageScene", Color.black, 1.0f);
+               if (click == false)
+               {
+                   audioSource.PlayOneShot(sound1);
+                   click = true;
+               }
            }
            else
            {

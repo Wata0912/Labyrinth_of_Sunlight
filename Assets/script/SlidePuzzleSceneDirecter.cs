@@ -31,7 +31,14 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     // 実際に生成されたピースのリスト
     List<GameObject> movablePiece = new List<GameObject>();
     public List<Tile> allTilesScript = new List<Tile>();
-   
+
+    AudioSource audioSource;
+    [SerializeField]  public AudioClip sound1;
+    [SerializeField]  public AudioClip sound2;
+    [SerializeField] public AudioClip sound3;
+    bool click;
+    bool Shuffled;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -48,6 +55,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         {
             if (objects != null)
             {
+                Shuffled = false;
                 foreach (var Cell in objects)
                 {
                     CreatePiece(Cell.object_id, new Vector3(Cell.x, Cell.y, 0), Quaternion.identity);
@@ -64,6 +72,9 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         ClearPanel.SetActive(false);
         retryButton.SetActive(false);
         PlayerPrefs.DeleteKey("StageID");
+
+        audioSource = GetComponent<AudioSource>();
+        click = false;
     }
 
     // Update is called once per frame
@@ -85,7 +96,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
                     GameObject emptyPiece = GetEmptyPiece(hitPiece);
 
                     SwapPiece(hitPiece, emptyPiece);
-
+                    
                 }
             }
         }
@@ -128,6 +139,11 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         Vector2 position = pieceA.transform.position;
         pieceA.transform.position = pieceB.transform.position;
         pieceB.transform.position = position;
+        if(Shuffled == true)
+        {
+            audioSource.PlayOneShot(sound2);
+        }
+        
     }
 
     public void OnClickRetry()
@@ -136,6 +152,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         playerObj.transform.position = new Vector3(-1.5f, 2.5f, 0);
 
         moveStartButton.SetActive(true);
+        audioSource.PlayOneShot(sound3);
     }
 
     // ピースを生成し、リストに追加
@@ -172,6 +189,8 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
             GameObject piece = movablePiece[rnd];
             SwapPiece(piece, movablePiece[0]);
         }
+
+        Shuffled = true;
     }
 
     // 「スタート」ボタンで移動開始
@@ -179,12 +198,14 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     {
         playerScript.isMoving = true;
         moveStartButton.SetActive(false);
+        audioSource.PlayOneShot(sound3);
     }
 
     // 進入禁止や画面外などでミスしたときに呼ばれる
     public void miss()
     {          
         retryButton.SetActive(true);
+       
     }
 
     // ゴールに到達したときの処理
@@ -201,6 +222,11 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     {
         //SceneManager.LoadScene("SelectStageScene");
         Initiate.Fade("SelectStageScene", Color.black, 1.0f);
+        if (click == false)
+        {
+            audioSource.PlayOneShot(sound1);
+            click = true;
+        }
     }
     public void ReLoadScene()
     {
@@ -220,6 +246,11 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
                     //SceneManager.LoadScene("SlidePuzzleScene");
                     Initiate.Fade("SlidePuzzleScene", Color.black, 1.0f);
                 }
+                if (click == false)
+                {
+                    audioSource.PlayOneShot(sound1);
+                    click = true;
+                }
             }
 
         }));
@@ -231,13 +262,16 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f; // 時間を通常に戻す
         isPaused = false;
+        audioSource.PlayOneShot(sound1);
     }
 
     public void Pause()
     {
+        audioSource.PlayOneShot(sound1);
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f; // ゲーム内時間を止める
         isPaused = true;
+        
     }
 
     public void Retire()
@@ -251,10 +285,12 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
 
         Debug.Log("リタイア");
         SceneManager.LoadScene("SelectStageScene", LoadSceneMode.Single);
+        if (click == false)
+        {
+            audioSource.PlayOneShot(sound1);
+            click = true;
+        }
     }
 
-    public void TestClick()
-    {
-        Debug.Log("ボタン押された！");
-    }
+   
 }

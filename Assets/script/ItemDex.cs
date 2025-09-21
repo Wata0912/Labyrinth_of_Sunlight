@@ -18,6 +18,10 @@ public class ItemDex : MonoBehaviour
 
     private Dictionary<int, ItemData> itemDict;
 
+    AudioSource audioSource;
+    public AudioClip sound1;
+    bool click;
+
     private void Start()
     {
         // マスターデータをDictionary化して高速アクセス可能にする
@@ -29,6 +33,9 @@ public class ItemDex : MonoBehaviour
 
         // コルーチン開始
         StartCoroutine(NetworkManager.Instance.HaveItem(OnItemsReceived));
+
+        audioSource = GetComponent<AudioSource>();
+        click = false;
     }
 
     // アイテム取得後の処理
@@ -62,6 +69,11 @@ public class ItemDex : MonoBehaviour
     {
         //SceneManager.LoadScene("SelectStageScene");
         Initiate.Fade("SelectStageScene", Color.black, 1.0f);
+        if (click == false)
+        {
+            audioSource.PlayOneShot(sound1);
+            click = true;
+        }
     }
 
 }

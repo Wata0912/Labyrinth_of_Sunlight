@@ -928,6 +928,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputField: {fileID: 221909932}
+  sound1: {fileID: 8300000, guid: aa7df29cf9c82bb4a9fde5e1d80de612, type: 3}
 --- !u!4 &1741567537
 Transform:
   m_ObjectHideFlags: 0
