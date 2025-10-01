@@ -5,3 +5,4 @@
 * プレイヤーは4×4のスライドパズルであらかじめ用意されている道タイルを使いスタート地点からゴールまでの道筋を作る
 * 道ができたらプレイヤーを動かし、ゴール地点まで移動することができればゲームクリアとなる
 * ゴールするとアイテムを獲得でき、アイテム画面で収集状況を確認することができる
+* ![ItemScene](https://raw.githubusercontent.com/Wata0912/Labyrinth_of_Sunlight/refs/heads/main/images/Items.png)
