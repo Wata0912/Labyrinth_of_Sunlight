@@ -42,15 +42,18 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //スタート、ゴール、プレイヤーを生成、情報を取得
         Instantiate(stratpieces, new Vector3(-1.5f, 2.5f, 0), Quaternion.identity);
         Instantiate(goalpieces, new Vector3(1.5f, -2.5f, 0), Quaternion.identity);
         playerObj = Instantiate(Player, new Vector3(-1.5f, 2.5f, 0), Quaternion.identity);
         playerScript = playerObj.GetComponent<Player>();
     
+        //セレクトで持ってきたステージIDを取得
         stage_id = PlayerPrefs.GetInt("StageID", 1); // デフォルトは0
         
         Debug.Log(stage_id);
              
+        //ステージidのステージ情報を取得、生成
         StartCoroutine(NetworkManager.Instance.GetCell(objects =>
         {
             if (objects != null)
@@ -146,6 +149,7 @@ public class SlidePuzzleSceneDirecter : MonoBehaviour
         
     }
 
+    //リトライボタン処理
     public void OnClickRetry()
     {     
         retryButton.SetActive(false);

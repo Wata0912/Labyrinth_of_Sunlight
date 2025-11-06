@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
     {
         if (isMoving)
         {
-            //移動中だけコライダー有効化(パネルが動かないようにする)
+            //移動中だけタイルコライダー有効化(パネルが動かないようにする)
             startTile.EnableCollider();
             goalTile.EnableCollider();
             collider2d.enabled = true;
@@ -56,6 +56,7 @@ public class Player : MonoBehaviour
         }
         else
         {
+
             startTile.FalseCollider();
             goalTile.FalseCollider();
             collider2d.enabled = false;

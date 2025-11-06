@@ -30,9 +30,6 @@ public class NetworkManager : MonoBehaviour
             return this.userName;
         }
     }
-
-    
-
     private static NetworkManager instance;
     public static NetworkManager Instance
     {
@@ -144,9 +141,10 @@ public class NetworkManager : MonoBehaviour
 
     }
 
+    //ステージ詳細取得APIを実行
     public IEnumerator GetCell(Action<CellResponse[]> result, int id)
     {
-        //ステージ一覧取得APIを実行
+       
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "stages/get/" + id);
         yield return request.SendWebRequest();
         if (request.result == UnityWebRequest.Result.Success
@@ -190,7 +188,7 @@ public class NetworkManager : MonoBehaviour
 
     }
 
-    public IEnumerator ShowUser(Action<UpdateUserRequest> result)
+    public IEnumerator ShowUser(Action<UpdateUserRequest> result)//ユーザー情報取得API
     {
 
         if (File.Exists(Application.persistentDataPath + "/saveData.json"))
@@ -227,7 +225,7 @@ public class NetworkManager : MonoBehaviour
 
     }
 
-    public IEnumerator LevelUP()
+    public IEnumerator LevelUP()//レベルアップAPI
     {
         // WWWFormを使用（空のフォーム）
         WWWForm form = new WWWForm();
@@ -251,7 +249,7 @@ public class NetworkManager : MonoBehaviour
 
         }
     }
-    public IEnumerator GetItem(int stage_id)
+    public IEnumerator GetItem(int stage_id)//アイテム獲得API
     {
         if (File.Exists(Application.persistentDataPath + "/saveData.json"))
         {
@@ -290,7 +288,7 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
-    public IEnumerator HaveItem(Action<ItemReqest[]> result)
+    public IEnumerator HaveItem(Action<ItemReqest[]> result)//所持アイテム取得API
     {
         if (File.Exists(Application.persistentDataPath + "/saveData.json"))
         {
