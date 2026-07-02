@@ -15,8 +15,9 @@ public class NetworkManager : MonoBehaviour
     static string API_BASE_URL = "http://localhost:8000/api/";
 #else
   // 本番環境で使用する値をセット
-    static string API_BASE_URL = "http://ge202411.japaneast.cloudapp.azure.com/api/";
+    static string API_BASE_URL = "http://ge202411.japanwest.cloudapp.azure.com/api/";
 #endif
+
 
     //private int userID; // 自分のユーザーID
     private string apiToken; // APUトークン
@@ -104,6 +105,7 @@ public class NetworkManager : MonoBehaviour
         }
         var reader =
                    new StreamReader(Application.persistentDataPath + "/saveData.json");
+        Debug.Log(Application.persistentDataPath);
         string json = reader.ReadToEnd();
         reader.Close();
         SaveData saveData = JsonConvert.DeserializeObject<SaveData>(json);
